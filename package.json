@@ -1,0 +1,9 @@
+{
+  "name": "anivault-anidb",
+  "version": "1.0.0",
+  "description": "Anime dub streaming via anidb.app for iPad 2",
+  "scripts": {
+    "build": "echo 'static site'"
+  },
+  "dependencies": {}
+}

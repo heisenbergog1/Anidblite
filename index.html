@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>AniVault</title>
+<style>
+* { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #06080f;
+  --card: #0d1117;
+  --card2: #111827;
+  --border: rgba(148,163,184,0.09);
+  --accent: #38bdf8;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --radius: 10px;
+}
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+/* Header */
+#hdr {
+  background: rgba(6,8,15,0.96);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+#hdr-inner {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+#logo { color: var(--accent); font-size: 17px; font-weight: 700; letter-spacing: -.5px; white-space: nowrap; cursor: pointer; }
+#logo span { color: var(--text); font-weight: 300; }
+#si { -webkit-flex: 1; flex: 1; background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 14px; padding: 9px 12px; outline: none; -webkit-appearance: none; }
+#si:focus { border-color: var(--accent); }
+#sb { background: var(--accent); border: none; border-radius: var(--radius); color: #000; cursor: pointer; font-size: 14px; font-weight: 700; padding: 9px 16px; -webkit-appearance: none; white-space: nowrap; }
+/* Main */
+#main { max-width: 860px; margin: 0 auto; padding: 14px; }
+/* Cards */
+#grid { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 10px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  overflow: hidden;
+  width: calc(50% - 5px);
+}
+.card:active { border-color: var(--accent); }
+.cimg { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; background: var(--card2); }
+.cbody { padding: 9px 10px; }
+.ctitle { font-size: 12px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cmeta { font-size: 11px; color: var(--muted); }
+/* Skeleton */
+.skel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); width: calc(50% - 5px); overflow: hidden; }
+.skel-img { width: 100%; aspect-ratio: 3/4; background: var(--card2); -webkit-animation: pulse 1.3s ease-in-out infinite; animation: pulse 1.3s ease-in-out infinite; }
+.skel-body { padding: 9px 10px; }
+.skel-line { background: var(--card2); border-radius: 4px; height: 11px; margin-bottom: 5px; -webkit-animation: pulse 1.3s ease-in-out infinite; animation: pulse 1.3s ease-in-out infinite; }
+.skel-line.s { width: 55%; }
+@-webkit-keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+/* Detail */
+#det { display: none; }
+#back { background: transparent; border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); cursor: pointer; font-size: 13px; padding: 8px 14px; margin-bottom: 14px; -webkit-appearance: none; }
+#det-hero { display: -webkit-flex; display: flex; gap: 12px; margin-bottom: 16px; }
+#det-cover { width: 90px; border-radius: var(--radius); object-fit: cover; -webkit-flex-shrink: 0; flex-shrink: 0; background: var(--card2); }
+#det-info { -webkit-flex: 1; flex: 1; min-width: 0; }
+#det-title { font-size: 16px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+.tag { background: var(--card2); border-radius: 4px; font-size: 11px; color: var(--muted); padding: 2px 7px; display: inline-block; margin: 0 3px 3px 0; }
+.tag-dub { background: rgba(56,189,248,.12); color: var(--accent); border: 1px solid rgba(56,189,248,.2); }
+/* Episodes */
+#ep-hdr { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
+#ep-list { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; gap: 5px; }
+.ep {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 13px;
+}
+.ep:active { border-color: var(--accent); }
+.ep-n { color: var(--accent); font-size: 13px; font-weight: 700; min-width: 26px; }
+.ep-t { -webkit-flex: 1; flex: 1; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ep-play { color: var(--accent); font-size: 17px; }
+.ep-load { color: var(--muted); font-size: 17px; }
+/* Player */
+#pov {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 200;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+#pov.on { display: -webkit-flex; display: flex; }
+#ptop {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,.85);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+}
+#pclose { background: rgba(255,255,255,.1); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-size: 15px; padding: 6px 12px; -webkit-appearance: none; }
+#plabel { color: rgba(255,255,255,.65); font-size: 13px; -webkit-flex: 1; flex: 1; }
+#pdub { background: rgba(56,189,248,.15); border: 1px solid var(--accent); border-radius: 4px; color: var(--accent); font-size: 11px; font-weight: 700; padding: 3px 8px; }
+#vwrap { -webkit-flex: 1; flex: 1; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
+#vid { width: 100%; height: 100%; background: #000; display: block; }
+/* Loading */
+#lov { display: none; position: fixed; inset: 0; background: rgba(6,8,15,.9); z-index: 300; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; gap: 14px; }
+#lov.on { display: -webkit-flex; display: flex; }
+#lspin { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; -webkit-animation: spin .8s linear infinite; animation: spin .8s linear infinite; }
+@-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+#ltxt { color: var(--muted); font-size: 13px; text-align: center; }
+/* Toast */
+#toast { background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius); bottom: 18px; color: var(--text); display: none; font-size: 13px; left: 50%; max-width: 260px; padding: 9px 15px; position: fixed; -webkit-transform: translateX(-50%); transform: translateX(-50%); z-index: 400; text-align: center; }
+#toast.on { display: block; }
+#toast.err { border-color: #ef4444; color: #fca5a5; }
+/* Status */
+#status { color: var(--muted); font-size: 14px; padding: 48px 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div id="hdr-inner">
+    <div id="logo" onclick="goHome()">Ani<span>Vault</span></div>
+    <input id="si" type="search" placeholder="Search anime…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <button id="sb" onclick="doSearch()">Go</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="home">
+    <div id="status">Search for a dub anime to get started.</div>
+    <div id="grid"></div>
+  </div>
+  <div id="det">
+    <button id="back" onclick="goHome()">← Back</button>
+    <div id="det-hero">
+      <img id="det-cover" src="" alt="">
+      <div id="det-info">
+        <div id="det-title"></div>
+        <div id="det-tags"></div>
+      </div>
+    </div>
+    <div id="ep-hdr">Episodes</div>
+    <div id="ep-list"></div>
+  </div>
+</div>
+
+<!-- Player -->
+<div id="pov">
+  <div id="ptop">
+    <button id="pclose" onclick="closePlayer()">✕</button>
+    <div id="plabel"></div>
+    <div id="pdub">DUB</div>
+  </div>
+  <div id="vwrap">
+    <video id="vid" controls playsinline webkit-playsinline x-webkit-airplay="allow" preload="none"></video>
+  </div>
+</div>
+
+<!-- Loading -->
+<div id="lov">
+  <div id="lspin"></div>
+  <div id="ltxt">Loading…</div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+var API = '/.netlify/functions/proxy';
+var cur = null; // current anime
+var toastT = null;
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function toast(msg, isErr) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'on' + (isErr ? ' err' : '');
+  if (toastT) clearTimeout(toastT);
+  toastT = setTimeout(function(){ el.className=''; }, 3500);
+}
+
+function loading(msg) {
+  var ov = document.getElementById('lov');
+  var tx = document.getElementById('ltxt');
+  if (msg) { tx.textContent = msg; ov.className = 'on'; }
+  else { ov.className = ''; }
+}
+
+function xhr(url, cb) {
+  var r = new XMLHttpRequest();
+  r.open('GET', url, true);
+  r.timeout = 30000;
+  r.onreadystatechange = function() {
+    if (r.readyState !== 4) return;
+    if (r.status === 200) {
+      try { cb(null, JSON.parse(r.responseText)); }
+      catch(e) { cb(new Error('Parse error')); }
+    } else {
+      try { var j = JSON.parse(r.responseText); cb(new Error(j.error || 'Failed')); }
+      catch(e) { cb(new Error('Request failed')); }
+    }
+  };
+  r.ontimeout = function(){ cb(new Error('Timed out')); };
+  r.onerror = function(){ cb(new Error('Network error')); };
+  r.send();
+}
+
+function goHome() {
+  document.getElementById('home').style.display = '';
+  document.getElementById('det').style.display = 'none';
+  cur = null;
+}
+
+function showDet() {
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('det').style.display = '';
+  window.scrollTo(0,0);
+}
+
+/* Search */
+function doSearch() {
+  var q = document.getElementById('si').value.trim();
+  if (!q) return;
+  var grid = document.getElementById('grid');
+  var status = document.getElementById('status');
+  status.textContent = 'Searching…';
+  grid.innerHTML = skelHTML(6);
+  goHome();
+
+  xhr(API + '?action=search&q=' + encodeURIComponent(q), function(err, data) {
+    grid.innerHTML = '';
+    if (err || !data || !data.length) {
+      status.textContent = err ? 'Search failed.' : 'No results found.';
+      return;
+    }
+    status.textContent = '';
+    for (var i = 0; i < data.length; i++) {
+      grid.appendChild(makeCard(data[i]));
+    }
+  });
+}
+
+function skelHTML(n) {
+  var s = '';
+  for (var i = 0; i < n; i++) {
+    s += '<div class="skel"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line s"></div></div></div>';
+  }
+  return s;
+}
+
+function makeCard(a) {
+  var d = document.createElement('div');
+  d.className = 'card';
+  d.innerHTML = '<img class="cimg" src="' + esc(a.image) + '" loading="lazy" alt="" onerror="this.style.display=\'none\'">'
+    + '<div class="cbody"><div class="ctitle">' + esc(a.title) + '</div>'
+    + '<div class="cmeta">' + esc(a.type) + (a.year ? ' · ' + a.year : '') + '</div></div>';
+  d.onclick = function(){ openAnime(a); };
+  return d;
+}
+
+/* Anime detail */
+function openAnime(a) {
+  cur = a;
+  document.getElementById('det-cover').src = a.image || '';
+  document.getElementById('det-title').textContent = a.title || '';
+  document.getElementById('det-tags').innerHTML = '<span class="tag">' + esc(a.type) + '</span>'
+    + (a.year ? '<span class="tag">' + a.year + '</span>' : '')
+    + '<span class="tag tag-dub">DUB</span>';
+  document.getElementById('ep-list').innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0">Loading episodes…</div>';
+  showDet();
+
+  xhr(API + '?action=episodes&id=' + a.id, function(err, data) {
+    if (err || !data || !data.episodes || !data.episodes.length) {
+      document.getElementById('ep-list').innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0">No episodes found.</div>';
+      return;
+    }
+    renderEps(data.episodes);
+  });
+}
+
+function renderEps(eps) {
+  var list = document.getElementById('ep-list');
+  list.innerHTML = '';
+  for (var i = 0; i < eps.length; i++) {
+    list.appendChild(makeEp(eps[i]));
+  }
+}
+
+function makeEp(ep) {
+  var d = document.createElement('div');
+  d.className = 'ep';
+  d.innerHTML = '<div class="ep-n">' + ep.number + '</div>'
+    + '<div class="ep-t">Episode ' + ep.number + '</div>'
+    + '<div class="ep-play" id="eplay-' + ep.id + '">▶</div>';
+  var epId = ep.id;
+  var epNum = ep.number;
+  d.onclick = function(){ playEp(epId, epNum, d); };
+  return d;
+}
+
+/* Playback */
+function playEp(epId, epNum, row) {
+  // Show spinner on row
+  var playEl = document.getElementById('eplay-' + epId);
+  if (playEl) playEl.textContent = '⋯';
+
+  loading('Getting dub stream…');
+
+  // Step 1: get languages
+  xhr(API + '?action=languages&epId=' + epId, function(err, data) {
+    if (err || !data || !data.languages) {
+      loading(null);
+      if (playEl) playEl.textContent = '▶';
+      toast('Could not get stream info.', true);
+      return;
+    }
+
+    // Find English (dub)
+    var engLang = null;
+    for (var i = 0; i < data.languages.length; i++) {
+      if (data.languages[i].code === 'eng') { engLang = data.languages[i]; break; }
+    }
+
+    if (!engLang) {
+      loading(null);
+      if (playEl) playEl.textContent = '▶';
+      toast('No English dub available for this episode.', true);
+      return;
+    }
+
+    // Step 2: get m3u8 from embed URL
+    xhr(API + '?action=stream&embedUrl=' + encodeURIComponent(engLang.embed_url), function(err2, stream) {
+      loading(null);
+      if (playEl) playEl.textContent = '▶';
+
+      if (err2 || !stream || !stream.url) {
+        toast('Could not get stream URL.', true);
+        return;
+      }
+
+      openPlayer(stream.url, epNum);
+    });
+  });
+}
+
+function openPlayer(url, epNum) {
+  var pov = document.getElementById('pov');
+  var vid = document.getElementById('vid');
+  var lbl = document.getElementById('plabel');
+
+  lbl.textContent = cur ? cur.title + ' — Ep ' + epNum : 'Episode ' + epNum;
+  vid.src = url;
+  pov.className = 'on';
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(function(){ try { vid.play(); } catch(e){} }, 400);
+}
+
+function closePlayer() {
+  var vid = document.getElementById('vid');
+  vid.pause();
+  vid.src = '';
+  document.getElementById('pov').className = '';
+  document.body.style.overflow = '';
+}
+
+/* Enter to search */
+document.getElementById('si').onkeydown = function(e) {
+  if ((e.keyCode||e.which) === 13) doSearch();
+};
+</script>
+</body>
+</html>
